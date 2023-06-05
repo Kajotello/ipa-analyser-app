@@ -131,6 +131,13 @@ export function MyChart(props) {
 
   const [data, setNewData] = useState(null);
 
+  function handleReset() {
+    if (chartRef.current !== null) {
+      var chart = chartRef.current;
+      chart.resetZoom();
+    }
+  }
+
   useEffect(() => {
     let newData = { datasets: [] };
     var colors, alpha;
@@ -185,7 +192,7 @@ export function MyChart(props) {
       ) : (
         <></>
       )}
-      <Button>Resetuj</Button>
+      <Button onClick={handleReset}>Resetuj</Button>
     </Box>
   );
 }

@@ -80,9 +80,9 @@ const options = [
 ];
 
 const timeInterval = [
-  { label: "Dzień", value: 0 },
-  { label: "Miesiąc", value: 1 },
-  { label: "Rok", value: 2 },
+  { label: "Dzień", value: "day" },
+  { label: "Miesiąc", value: "month" },
+  { label: "Rok", value: "year" },
   { label: "Korekta rozkładu", value: 3 },
   { label: "Edycja rozkładu", value: 4 },
 ];
@@ -136,7 +136,7 @@ export default function LineDateAnalysis() {
   const [statisticType, setStatisticType] = useState(0);
   const [isWithZero, setIsWithZero] = useState(0);
   const [infoPopupOpen, setPopupOpen] = useState(false);
-  const [timePerspective, setTimePerspective] = useState(0);
+  const [timePerspective, setTimePerspective] = useState("day");
   const [selectedTime, setSeclectedTime] = useState(null);
   const [timetableDataset, setTimetableDataset] = useState(null);
   const [lineData, setLineData] = useState(null);
@@ -170,10 +170,11 @@ export default function LineDateAnalysis() {
         year: selectedTime.$d.getFullYear(),
         direction: direction,
         category: category,
+        time_scope: timePerspective,
       })
       .then(function (response) {
-        console.log(response.data[2]);
-        setLineData(response.data[2]);
+        console.log(response.data);
+        setLineData(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -187,8 +188,8 @@ export default function LineDateAnalysis() {
           day: selectedTime.$d.getDate(),
           month: selectedTime.$d.getMonth() + 1,
           year: selectedTime.$d.getFullYear(),
-          direction: 0,
-          category: 0,
+          direction: direction,
+          category: category,
           station_name: currentStation._id.point_name,
         })
         .then(function (response) {
@@ -198,7 +199,7 @@ export default function LineDateAnalysis() {
           console.log(error);
         });
     }
-  }, [selectedTime, timePerspective, currentStation]);
+  }, [selectedTime, timePerspective, currentStation, direction, category]);
 
   const handleTimePerpectiveChange = (event, newValue) => {
     setTimePerspective(newValue.props.value);
@@ -206,9 +207,11 @@ export default function LineDateAnalysis() {
 
   function handleNextDateClick() {
     setSeclectedTime((prevSelectedTime) => {
-      if (timePerspective === 0) return prevSelectedTime.add(1, "day");
-      else if (timePerspective === 1) return prevSelectedTime.add(1, "month");
-      else if (timePerspective === 2) return prevSelectedTime.add(1, "year");
+      if (timePerspective === "day") return prevSelectedTime.add(1, "day");
+      else if (timePerspective === "month")
+        return prevSelectedTime.add(1, "month");
+      else if (timePerspective === "year")
+        return prevSelectedTime.add(1, "year");
     });
   }
 
@@ -222,10 +225,10 @@ export default function LineDateAnalysis() {
 
   function handlePrevDateClick() {
     setSeclectedTime((prevSelectedTime) => {
-      if (timePerspective === 0) return prevSelectedTime.subtract(1, "day");
-      else if (timePerspective === 1)
+      if (timePerspective === "day") return prevSelectedTime.subtract(1, "day");
+      else if (timePerspective === "month")
         return prevSelectedTime.subtract(1, "month");
-      else if (timePerspective === 2)
+      else if (timePerspective === "year")
         return prevSelectedTime.subtract(1, "year");
     });
   }
@@ -300,12 +303,18 @@ export default function LineDateAnalysis() {
                   <ul class="rb">
                     {lineData.map((station) => (
                       <li
-                        // className={classNames(
-                        //   { station: station.type === "station" },
-                        //   { stop: station.type === "stop" },
-                        //   { active: station.name === currentStation.name }
-                        // )}
-                        class="station"
+                        className={classNames(
+                          {
+                            station:
+                              station._id.point_type === "ST" ||
+                              station._id.point_type === "PODG",
+                          },
+                          { stop: station._id.point_type === "PO" },
+                          {
+                            active:
+                              station._id.name === currentStation.point_name,
+                          }
+                        )}
                         onClick={() => setStation(station)}
                       >
                         <div class="name">
@@ -456,7 +465,7 @@ export default function LineDateAnalysis() {
         </Grid>
         <Grid item xs={6.5}>
           <Box sx={{ position: "sticky", top: 0 }}>
-            {timePerspective === 0 && selectedTime !== null ? (
+            {timePerspective === "day" && selectedTime !== null ? (
               <>
                 <Typography variant="h5" sx={{ textAlign: "center" }}>
                   {" "}
