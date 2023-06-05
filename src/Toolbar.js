@@ -1,4 +1,4 @@
-import React from "react";
+import React, { cloneElement } from "react";
 import AppBar from "@mui/material/AppBar";
 import { Autocomplete, TextField, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
@@ -79,7 +79,9 @@ export class ToolBar extends React.Component {
                 }}
               ></TrainIcon>
             </Grid>
-            <Grid item xs={8}></Grid>
+            <Grid item xs={8}>
+              <div>{this.props.component}</div>
+            </Grid>
             <Grid item xs={2}>
               <Typography
                 fontSize={16}

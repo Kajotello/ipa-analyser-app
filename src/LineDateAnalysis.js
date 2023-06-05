@@ -1,10 +1,7 @@
 import "./Timeline.css";
 import { MyChart } from "./Chart";
 import { ToolBar } from "./Toolbar";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import {
   Autocomplete,
   Box,
@@ -35,6 +32,7 @@ import Dialog from "@mui/material/Dialog";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { TimeSelection } from "./TimeSecetion";
 
 const myLine = [
   {
@@ -77,14 +75,6 @@ const options = [
     label: "rozkład opóźnień nabytych",
     value: 2,
   },
-];
-
-const timeInterval = [
-  { label: "Dzień", value: "day" },
-  { label: "Miesiąc", value: "month" },
-  { label: "Rok", value: "year" },
-  { label: "Korekta rozkładu", value: 3 },
-  { label: "Edycja rozkładu", value: 4 },
 ];
 
 const statsTypes = [
@@ -233,7 +223,7 @@ export default function LineDateAnalysis() {
     });
   }
 
-  const handleToggle = (value: number) => () => {
+  const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -243,297 +233,289 @@ export default function LineDateAnalysis() {
     } else {
       newChecked.splice(currentIndex, 1);
     }
-    console.log(newChecked);
     setChecked(newChecked);
+  };
+
+  const handleTimeSet = (newValue) => {
+    setSeclectedTime(newValue);
   };
   return (
     <>
-      <ToolBar></ToolBar>
-      <Grid container sx={{ mb: 5 }}>
-        <Grid item xs={4} sx={{ ml: 5 }}>
-          <InputLabel>Horyzont czasowy</InputLabel>
-          <FormControl>
-            <Select
-              options={timeInterval}
-              value={timePerspective}
-              onChange={handleTimePerpectiveChange}
-            >
-              {timeInterval.map((interval) => (
-                <MenuItem value={interval.value}>{interval.label}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={1}>
-          <Button onClick={handlePrevDateClick} sx={{ mt: 2 }}>
-            Poprzedni
-          </Button>
-        </Grid>
-        <Grid item xs={2} sx={{ justifyContent: "center" }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="Basic date picker"
-                value={selectedTime}
-                onChange={(newValue) => {
-                  setSeclectedTime(newValue);
-                  console.log(selectedTime);
-                }}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={1}>
-          <Button onClick={handleNextDateClick} sx={{ mt: 2 }}>
-            Następny
-          </Button>
-        </Grid>
-      </Grid>
+      <ToolBar
+        component={
+          <TimeSelection
+            timePerspective={timePerspective}
+            handleTimePerpectiveChange={handleTimePerpectiveChange}
+            handlePrevDateClick={handlePrevDateClick}
+            selectedTime={selectedTime}
+            handleTimeSet={handleTimeSet}
+            handleNextDateClick={handleNextDateClick}
+          ></TimeSelection>
+        }
+      ></ToolBar>
+
       <SimpleDialog
         open={infoPopupOpen}
         handleClose={() => setPopupOpen(false)}
       ></SimpleDialog>
 
-      <Grid container>
-        <Grid item xs={3}>
-          {lineData !== null ? (
-            <div class="container">
-              <div class="rightbox">
-                <div class="rb-container">
-                  <ul class="rb">
-                    {lineData.map((station) => (
-                      <li
-                        className={classNames(
-                          {
-                            station:
-                              station._id.point_type === "ST" ||
-                              station._id.point_type === "PODG",
-                          },
-                          { stop: station._id.point_type === "PO" },
-                          {
-                            active:
-                              station._id.point_name ===
-                              selectedStation._id.point_name,
-                          }
-                        )}
-                        onClick={() => setStation(station)}
-                      >
-                        <div class="name">
-                          {station._id.point_name} (
-                          {station._id.point_position.toFixed(3)})
-                        </div>
-                        <div class="item-title">
-                          {checked.includes(0) ? (
-                            <>
-                              Maksymalne opóźnienie przyjazdowe:{" "}
-                              {station.max_arrival_delay} min <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(1) ? (
-                            <>
-                              Maksymalne opóźnienie wyjazdowe:{" "}
-                              {station.max_departure_delay} min
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(2) ? (
-                            <>
-                              Maksymalne opóźnienie nabyte:{" "}
-                              {station.max_delay_gained} min
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(3) ? (
-                            <>
-                              Średnie opóźnienie przyjazdowe:{" "}
-                              {station.avg_arrival_delay.toFixed(2)} min
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(4) ? (
-                            <>
-                              Średnie opóźnienie wyjazdowe:{" "}
-                              {station.avg_departure_delay.toFixed(2)} min
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(5) ? (
-                            <>
-                              Średnie opóźnienie nabyte:{" "}
-                              {station.avg_delay_gained.toFixed(2)} min
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(6) ? (
-                            <>
-                              Średni czas postoju (rozkładowy):{" "}
-                              {station.avg_schedule_stop_time.toFixed(1)} s
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {checked.includes(7) ? (
-                            <>
-                              Średni czas postoju (rzeczywisty):{" "}
-                              {station.avg_real_stop_time.toFixed(1)} s
-                              <br />
-                            </>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+      {selectedTime ? (
+        <>
+          <Grid container>
+            <Grid item xs={3}>
+              {lineData !== null ? (
+                <div class="container">
+                  <div class="rightbox">
+                    <div class="rb-container">
+                      <ul class="rb">
+                        {lineData.map((station) => (
+                          <li
+                            className={classNames(
+                              {
+                                station:
+                                  station._id.point_type === "ST" ||
+                                  station._id.point_type === "PODG",
+                              },
+                              { stop: station._id.point_type === "PO" },
+                              {
+                                active:
+                                  station._id.point_name ===
+                                  selectedStation._id.point_name,
+                              }
+                            )}
+                            onClick={() => setStation(station)}
+                          >
+                            <div class="name">
+                              {station._id.point_name} (
+                              {station._id.point_position.toFixed(3)})
+                            </div>
+                            <div class="item-title">
+                              {checked.includes(0) ? (
+                                <>
+                                  Maksymalne opóźnienie przyjazdowe:{" "}
+                                  {station.max_arrival_delay} min <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(1) ? (
+                                <>
+                                  Maksymalne opóźnienie wyjazdowe:{" "}
+                                  {station.max_departure_delay} min
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(2) ? (
+                                <>
+                                  Maksymalne opóźnienie nabyte:{" "}
+                                  {station.max_delay_gained} min
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(3) ? (
+                                <>
+                                  Średnie opóźnienie przyjazdowe:{" "}
+                                  {station.avg_arrival_delay.toFixed(2)} min
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(4) ? (
+                                <>
+                                  Średnie opóźnienie wyjazdowe:{" "}
+                                  {station.avg_departure_delay.toFixed(2)} min
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(5) ? (
+                                <>
+                                  Średnie opóźnienie nabyte:{" "}
+                                  {station.avg_delay_gained.toFixed(2)} min
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(6) ? (
+                                <>
+                                  Średni czas postoju (rozkładowy):{" "}
+                                  {station.avg_schedule_stop_time.toFixed(1)} s
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                              {checked.includes(7) ? (
+                                <>
+                                  Średni czas postoju (rzeczywisty):{" "}
+                                  {station.avg_real_stop_time.toFixed(1)} s
+                                  <br />
+                                </>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <></>
-          )}
-        </Grid>
-        <Grid item xs={2} sx={{ m: 2 }}>
-          <ToggleButtonGroup
-            color="primary"
-            exclusive
-            aria-label="Platform"
-            value={category}
-            onChange={handleCategoryChange}
-            sx={{ ml: 2 }}
-          >
-            <ToggleButton value={1}>Pośpieszne</ToggleButton>
-            <ToggleButton value={2}>Osobowe</ToggleButton>
-            <ToggleButton value={0}>Wszystkie</ToggleButton>
-          </ToggleButtonGroup>
-          <ToggleButtonGroup
-            color="primary"
-            value={direction}
-            exclusive
-            aria-label="Platform"
-            onChange={handleDirectionChange}
-            sx={{ ml: 3, mt: 2 }}
-          >
-            <ToggleButton value={2}>➡ Piła</ToggleButton>
-            <ToggleButton value={1}>➡ Poznań</ToggleButton>
-            <ToggleButton value={0}>Wszystkie</ToggleButton>
-          </ToggleButtonGroup>
-          <List
-            sx={{
-              width: "100%",
-              maxWidth: 360,
-              bgcolor: "background.paper",
-              ml: 2,
-            }}
-          >
-            {statsTypes.map((statistic) => {
-              const labelId = `checkbox-list-label-${statistic.value}`;
-
-              return (
-                <ListItem key={statistic.value} disablePadding>
-                  <ListItemButton
-                    role={undefined}
-                    onClick={handleToggle(statistic.value)}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(statistic.value) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText id={labelId} primary={statistic.label} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Grid>
-        <Grid item xs={6.5}>
-          <Box sx={{ position: "sticky", top: 0 }}>
-            {timePerspective === "day" && selectedTime !== null ? (
-              <>
-                <Typography variant="h5" sx={{ textAlign: "center" }}>
-                  {" "}
-                  Wykres ruchu w dniu {selectedTime.day}
-                </Typography>
-                <Box
-                  sx={{
-                    ml: 2,
-                    mr: 2,
-                  }}
-                >
-                  <MyChart
-                    position={selectedStation._id.point_position}
-                    dataset={timetableDataset}
-                    date={selectedTime}
-                  ></MyChart>
-                </Box>
-              </>
-            ) : (
-              <></>
-            )}
-            <Box sx={{ ml: 2, mr: 2 }}>
-              <Typography sx={{ mt: 4 }}>
-                Wybrana stacja: {selectedStation.name}
-              </Typography>
-              {selectedStation !== 0 ? (
-                <>
-                  <ComboBox
-                    options={options}
-                    value={statisticType}
-                    onChange={setStatisticType}
-                  ></ComboBox>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        value={isWithZero}
-                        onChange={(e, newValue) => {
-                          setIsWithZero(newValue === true ? 1 : 0);
-                        }}
-                      />
-                    }
-                    label="Czy uwzględniać 0? "
-                  />
-                  <BarChart
-                    statisticType={statisticType}
-                    isWithZero={isWithZero}
-                    histogramData={histogramsData}
-                  ></BarChart>
-                </>
               ) : (
                 <></>
               )}
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid container sx={{ mt: 10 }}>
-        <Grid item xs={4}>
-          <Typography>Średnie opóźnienie</Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography>Średnie maksymalne opóźnienie</Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography>Liczba pociągów</Typography>
-        </Grid>
-      </Grid>
+            </Grid>
+            <Grid item xs={2} sx={{ m: 2 }}>
+              <ToggleButtonGroup
+                color="primary"
+                exclusive
+                aria-label="Platform"
+                value={category}
+                onChange={handleCategoryChange}
+                sx={{ ml: 2 }}
+              >
+                <ToggleButton value={1}>Pośpieszne</ToggleButton>
+                <ToggleButton value={2}>Osobowe</ToggleButton>
+                <ToggleButton value={0}>Wszystkie</ToggleButton>
+              </ToggleButtonGroup>
+              <ToggleButtonGroup
+                color="primary"
+                value={direction}
+                exclusive
+                aria-label="Platform"
+                onChange={handleDirectionChange}
+                sx={{ ml: 3, mt: 2 }}
+              >
+                <ToggleButton value={2}>➡ Piła</ToggleButton>
+                <ToggleButton value={1}>➡ Poznań</ToggleButton>
+                <ToggleButton value={0}>Wszystkie</ToggleButton>
+              </ToggleButtonGroup>
+              <List
+                sx={{
+                  width: "100%",
+                  maxWidth: 360,
+                  bgcolor: "background.paper",
+                  ml: 2,
+                }}
+              >
+                {statsTypes.map((statistic) => {
+                  const labelId = `checkbox-list-label-${statistic.value}`;
+
+                  return (
+                    <ListItem key={statistic.value} disablePadding>
+                      <ListItemButton
+                        role={undefined}
+                        onClick={handleToggle(statistic.value)}
+                        dense
+                      >
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(statistic.value) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ "aria-labelledby": labelId }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText id={labelId} primary={statistic.label} />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Grid>
+            <Grid item xs={6.5}>
+              <Box sx={{ position: "sticky", top: 0 }}>
+                {timePerspective === "day" && selectedTime !== null ? (
+                  <>
+                    <Typography variant="h5" sx={{ textAlign: "center" }}>
+                      {" "}
+                      Wykres ruchu w dniu {selectedTime.day}
+                    </Typography>
+                    <Box
+                      sx={{
+                        ml: 2,
+                        mr: 2,
+                      }}
+                    >
+                      <MyChart
+                        position={selectedStation._id.point_position}
+                        dataset={timetableDataset}
+                        date={selectedTime}
+                      ></MyChart>
+                    </Box>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Box sx={{ ml: 2, mr: 2 }}>
+                  <Typography sx={{ mt: 4 }}>
+                    Wybrana stacja: {selectedStation.name}
+                  </Typography>
+                  {selectedStation !== 0 ? (
+                    <>
+                      <ComboBox
+                        options={options}
+                        value={statisticType}
+                        onChange={setStatisticType}
+                      ></ComboBox>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            value={isWithZero}
+                            onChange={(e, newValue) => {
+                              setIsWithZero(newValue === true ? 1 : 0);
+                            }}
+                          />
+                        }
+                        label="Czy uwzględniać 0? "
+                      />
+                      <BarChart
+                        statisticType={statisticType}
+                        isWithZero={isWithZero}
+                        histogramData={histogramsData}
+                      ></BarChart>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid container sx={{ mt: 10 }}>
+            <Grid item xs={4}>
+              <Typography>Średnie opóźnienie</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Średnie maksymalne opóźnienie</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Liczba pociągów</Typography>
+            </Grid>
+          </Grid>{" "}
+        </>
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          marginTop={10}
+        >
+          <Typography variant="h3">
+            Witaj! Wybierz datę żeby rozpocząć.
+          </Typography>
+          <img src="edek.jpg" alt="maskotka"></img>
+        </Box>
+      )}
     </>
   );
 }
