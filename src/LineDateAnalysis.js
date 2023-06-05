@@ -130,7 +130,7 @@ function SimpleDialog(props) {
 
 export default function LineDateAnalysis() {
   const [checked, setChecked] = useState([0]);
-  const [currentStation, setStation] = useState({
+  const [selectedStation, setStation] = useState({
     _id: { point_position: 0 },
   });
   const [statisticType, setStatisticType] = useState(0);
@@ -190,7 +190,7 @@ export default function LineDateAnalysis() {
           year: selectedTime.$d.getFullYear(),
           direction: direction,
           category: category,
-          station_name: currentStation._id.point_name,
+          station_name: selectedStation._id.point_name,
         })
         .then(function (response) {
           setHistogramsData(response.data);
@@ -199,7 +199,7 @@ export default function LineDateAnalysis() {
           console.log(error);
         });
     }
-  }, [selectedTime, timePerspective, currentStation, direction, category]);
+  }, [selectedTime, timePerspective, selectedStation, direction, category]);
 
   const handleTimePerpectiveChange = (event, newValue) => {
     setTimePerspective(newValue.props.value);
@@ -312,7 +312,8 @@ export default function LineDateAnalysis() {
                           { stop: station._id.point_type === "PO" },
                           {
                             active:
-                              station._id.name === currentStation.point_name,
+                              station._id.point_name ===
+                              selectedStation._id.point_name,
                           }
                         )}
                         onClick={() => setStation(station)}
@@ -478,7 +479,7 @@ export default function LineDateAnalysis() {
                   }}
                 >
                   <MyChart
-                    position={currentStation._id.point_position}
+                    position={selectedStation._id.point_position}
                     dataset={timetableDataset}
                     date={selectedTime}
                   ></MyChart>
@@ -489,9 +490,9 @@ export default function LineDateAnalysis() {
             )}
             <Box sx={{ ml: 2, mr: 2 }}>
               <Typography sx={{ mt: 4 }}>
-                Wybrana stacja: {currentStation.name}
+                Wybrana stacja: {selectedStation.name}
               </Typography>
-              {currentStation !== 0 ? (
+              {selectedStation !== 0 ? (
                 <>
                   <ComboBox
                     options={options}
