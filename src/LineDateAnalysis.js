@@ -262,7 +262,7 @@ export default function LineDateAnalysis() {
       {selectedTime ? (
         <>
           <Grid container>
-            <Grid item xs={3}>
+            <Grid item xs={5}>
               {lineData !== null ? (
                 <div class="container">
                   <div class="rightbox">
@@ -372,66 +372,7 @@ export default function LineDateAnalysis() {
                 <></>
               )}
             </Grid>
-            <Grid item xs={2} sx={{ m: 2 }}>
-              <ToggleButtonGroup
-                color="primary"
-                exclusive
-                aria-label="Platform"
-                value={category}
-                onChange={handleCategoryChange}
-                sx={{ ml: 2 }}
-              >
-                <ToggleButton value={1}>Pośpieszne</ToggleButton>
-                <ToggleButton value={2}>Osobowe</ToggleButton>
-                <ToggleButton value={0}>Wszystkie</ToggleButton>
-              </ToggleButtonGroup>
-              <ToggleButtonGroup
-                color="primary"
-                value={direction}
-                exclusive
-                aria-label="Platform"
-                onChange={handleDirectionChange}
-                sx={{ ml: 3, mt: 2 }}
-              >
-                <ToggleButton value={2}>➡ Piła</ToggleButton>
-                <ToggleButton value={1}>➡ Poznań</ToggleButton>
-                <ToggleButton value={0}>Wszystkie</ToggleButton>
-              </ToggleButtonGroup>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                  ml: 2,
-                }}
-              >
-                {statsTypes.map((statistic) => {
-                  const labelId = `checkbox-list-label-${statistic.value}`;
-
-                  return (
-                    <ListItem key={statistic.value} disablePadding>
-                      <ListItemButton
-                        role={undefined}
-                        onClick={handleToggle(statistic.value)}
-                        dense
-                      >
-                        <ListItemIcon>
-                          <Checkbox
-                            edge="start"
-                            checked={checked.indexOf(statistic.value) !== -1}
-                            tabIndex={-1}
-                            disableRipple
-                            inputProps={{ "aria-labelledby": labelId }}
-                          />
-                        </ListItemIcon>
-                        <ListItemText id={labelId} primary={statistic.label} />
-                      </ListItemButton>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Grid>
-            <Grid item xs={6.5}>
+            <Grid item xs={7}>
               <Box sx={{ position: "sticky", top: 0 }}>
                 {timePerspective === "day" && selectedTime !== null ? (
                   <>

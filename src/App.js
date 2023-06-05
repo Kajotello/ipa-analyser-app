@@ -25,6 +25,9 @@ const theme = createTheme({
       xxl: 1900,
     },
   },
+  // typography: {
+  //   fontFamily: `"PT Sans", 'sans-serif'`,
+  // },
 });
 
 function App() {
