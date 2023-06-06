@@ -44,7 +44,8 @@ ChartJS.register(
         var chartPosition =
           ((chart.scales.y.end - options.position) /
             (chart.scales.y.end - chart.scales.y.start)) *
-          chart.height;
+            chart.chartArea.height +
+          10;
         const leftX = chart.scales["x"].left;
         const rightX = chart.scales["x"].right;
         ctx.save();

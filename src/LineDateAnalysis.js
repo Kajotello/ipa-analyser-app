@@ -149,6 +149,7 @@ export default function LineDateAnalysis() {
           direction: direction,
           category: category,
           station_name: selectedStation._id.point_name,
+          time_scope: timePerspective,
         })
         .then(function (response) {
           setHistogramsData(response.data);
@@ -442,7 +443,7 @@ export default function LineDateAnalysis() {
                       <>
                         <FormControl fullWidth sx={{ mt: 3 }}>
                           <InputLabel id="select-time-scope-label">
-                            Horyzont czasowy
+                            Rodzaj statystyki
                           </InputLabel>
                           <Select
                             labelId="select-time-scope-label"
@@ -474,7 +475,7 @@ export default function LineDateAnalysis() {
               </Box>
             </Grid>
           </Grid>
-          <Grid container sx={{ mt: 10 }}>
+          {/* <Grid container sx={{ mt: 10 }}>
             <Grid item xs={4}>
               <Typography>Średnie opóźnienie</Typography>
             </Grid>
@@ -484,7 +485,7 @@ export default function LineDateAnalysis() {
             <Grid item xs={4}>
               <Typography>Liczba pociągów</Typography>
             </Grid>
-          </Grid>{" "}
+          </Grid>{" "} */}
         </>
       ) : (
         <Box
