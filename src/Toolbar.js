@@ -1,25 +1,16 @@
 import React, { cloneElement } from "react";
 import AppBar from "@mui/material/AppBar";
-import { Autocomplete, TextField, Typography } from "@mui/material";
+import { Autocomplete, IconButton, TextField, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import TrainIcon from "@mui/icons-material/Train";
+import { MoreVert } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { TimelineConfiguration } from "./Timelineconfiguration";
 
 const options = [
   { label: "Opóźnienia - widok dnia", value: 1 },
   { label: "Opóźnienia - widok zbiorczy", value: 2 },
 ];
-
-function ComboBox(props) {
-  return (
-    <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={props.options}
-      sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="" />}
-    />
-  );
-}
 
 export class ToolBar extends React.Component {
   constructor(props) {
@@ -68,7 +59,7 @@ export class ToolBar extends React.Component {
           sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, mb: 4 }}
         >
           <Grid container>
-            <Grid item xs={2}>
+            <Grid item xs={2} display="flex">
               {" "}
               <TrainIcon
                 color="white"
@@ -82,7 +73,17 @@ export class ToolBar extends React.Component {
             <Grid item xs={8}>
               <div>{this.props.component}</div>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={2} display="flex">
+              <TimelineConfiguration
+                category={this.props.category}
+                handleCategoryChange={this.props.handleCategoryChange}
+                direction={this.props.direction}
+                handleDirectionChange={this.props.handleDirectionChange}
+                handleToggle={this.props.handleToggle}
+                checked={this.props.checked}
+                onlyStation={this.props.onlyStation}
+                setOnlyStation={this.props.setOnlyStation}
+              />
               <Typography
                 fontSize={16}
                 color="white"

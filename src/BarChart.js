@@ -82,15 +82,13 @@ export function BarChart(props) {
 
   return (
     <Box sx={{ ml: 2 }}>
-      {data !== null ? (
+      {data !== null && (
         <Bar
           redraw={true}
           options={options}
           data={data[props.statisticType]}
           ref={chartRef}
         />
-      ) : (
-        <></>
       )}
     </Box>
   );

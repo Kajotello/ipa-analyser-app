@@ -77,19 +77,6 @@ const options = [
   },
 ];
 
-const statsTypes = [
-  { label: "Maksymalne opóźnienie", value: 0 },
-  { label: "Maksymalne opóźnienie nabyte", value: 1 },
-  { label: "Średnie opóźnienie przyjazdowe", value: 2 },
-  { label: "Średnie opóźnienie odjazdowe", value: 3 },
-  { label: "Średnie opóźnienie nabyte", value: 4 },
-  { label: "Średni planowy czas postoju", value: 5 },
-  { label: "% punktualnych odjazdów (do 5 min)", value: 6 },
-  { label: "% punktualnych przyjazdów (do 5 min)", value: 7 },
-];
-
-const statsAllLine = [];
-
 function ComboBox(props) {
   return (
     <Autocomplete
@@ -133,6 +120,7 @@ export default function LineDateAnalysis() {
   const [histogramsData, setHistogramsData] = useState(null);
   const [category, setCategory] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [onlyStation, setOnlyStation] = useState(false);
 
   useEffect(() => {
     if (selectedTime !== null) {
@@ -233,6 +221,7 @@ export default function LineDateAnalysis() {
     } else {
       newChecked.splice(currentIndex, 1);
     }
+
     setChecked(newChecked);
   };
 
@@ -253,6 +242,14 @@ export default function LineDateAnalysis() {
             handleNextDateClick={handleNextDateClick}
           ></TimeSelection>
         }
+        category={category}
+        handleCategoryChange={handleCategoryChange}
+        direction={direction}
+        handleDirectionChange={handleDirectionChange}
+        handleToggle={handleToggle}
+        checked={checked}
+        onlyStation={onlyStation}
+        setOnlyStation={setOnlyStation}
       ></ToolBar>
 
       <SimpleDialog
@@ -270,102 +267,148 @@ export default function LineDateAnalysis() {
                   <div class="rightbox">
                     <div class="rb-container">
                       <ul class="rb">
-                        {lineData.map((station) => (
-                          <li
-                            className={classNames(
-                              {
-                                station:
-                                  station._id.point_type === "ST" ||
-                                  station._id.point_type === "PODG",
-                              },
-                              { stop: station._id.point_type === "PO" },
-                              {
-                                active:
-                                  station._id.point_name ===
-                                  selectedStation._id.point_name,
-                              }
-                            )}
-                            onClick={() => setStation(station)}
-                          >
-                            <div class="name">
-                              {station._id.point_name} (
-                              {station._id.point_position.toFixed(3)})
-                            </div>
-                            <div class="item-title">
-                              {checked.includes(0) ? (
-                                <>
-                                  Maksymalne opóźnienie przyjazdowe:{" "}
-                                  {station.max_arrival_delay} min <br />
-                                </>
-                              ) : (
-                                ""
+                        {lineData.map((station) =>
+                          (onlyStation && station._id.point_type !== "PO") ||
+                          !onlyStation ? (
+                            <li
+                              className={classNames(
+                                {
+                                  station:
+                                    station._id.point_type === "ST" ||
+                                    station._id.point_type === "PODG",
+                                },
+                                { stop: station._id.point_type === "PO" },
+                                {
+                                  active:
+                                    station._id.point_name ===
+                                    selectedStation._id.point_name,
+                                }
                               )}
-                              {checked.includes(1) ? (
-                                <>
-                                  Maksymalne opóźnienie wyjazdowe:{" "}
-                                  {station.max_departure_delay} min
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                              {checked.includes(2) ? (
-                                <>
-                                  Maksymalne opóźnienie nabyte:{" "}
-                                  {station.max_delay_gained} min
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                              {checked.includes(3) ? (
-                                <>
-                                  Średnie opóźnienie przyjazdowe:{" "}
-                                  {station.avg_arrival_delay.toFixed(2)} min
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                              {checked.includes(4) ? (
-                                <>
-                                  Średnie opóźnienie wyjazdowe:{" "}
-                                  {station.avg_departure_delay.toFixed(2)} min
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                              {checked.includes(5) ? (
-                                <>
-                                  Średnie opóźnienie nabyte:{" "}
-                                  {station.avg_delay_gained.toFixed(2)} min
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                              {checked.includes(6) ? (
-                                <>
-                                  Średni czas postoju (rozkładowy):{" "}
-                                  {station.avg_schedule_stop_time.toFixed(1)} s
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                              {checked.includes(7) ? (
-                                <>
-                                  Średni czas postoju (rzeczywisty):{" "}
-                                  {station.avg_real_stop_time.toFixed(1)} s
-                                  <br />
-                                </>
-                              ) : (
-                                ""
-                              )}
-                            </div>
-                          </li>
-                        ))}
+                              onClick={() => setStation(station)}
+                            >
+                              <div class="name">
+                                {station._id.point_name} (
+                                {station._id.point_position.toFixed(3)})
+                              </div>
+                              <div class="item-title">
+                                {checked.includes(0) ? (
+                                  <>
+                                    Maksymalne opóźnienie przyjazdowe:{" "}
+                                    {station.max_arrival_delay} min <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(1) ? (
+                                  <>
+                                    Maksymalne opóźnienie wyjazdowe:{" "}
+                                    {station.max_departure_delay} min
+                                    <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(2) ? (
+                                  <>
+                                    Maksymalne opóźnienie nabyte:{" "}
+                                    {station.max_delay_gained} min
+                                    <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(3) ? (
+                                  <>
+                                    Średnie opóźnienie przyjazdowe:{" "}
+                                    {station.avg_arrival_delay.toFixed(2)} min
+                                    <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(4) ? (
+                                  <>
+                                    Średnie opóźnienie wyjazdowe:{" "}
+                                    {station.avg_departure_delay.toFixed(2)} min
+                                    <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(5) ? (
+                                  <>
+                                    Średnie opóźnienie nabyte:{" "}
+                                    {station.avg_delay_gained.toFixed(2)} min
+                                    <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(6) ? (
+                                  <>
+                                    Średni czas postoju (rozkładowy):{" "}
+                                    {station.avg_schedule_stop_time.toFixed(1)}{" "}
+                                    s
+                                    <br />
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                {checked.includes(7) && (
+                                  <>
+                                    Średni czas postoju (rzeczywisty):{" "}
+                                    {station.avg_real_stop_time.toFixed(1)} s
+                                    <br />
+                                  </>
+                                )}
+                                {checked.includes(8) && (
+                                  <>
+                                    % pociągów punktualnych na przyjeździe (do 5
+                                    min):{" "}
+                                    {(
+                                      station.percentage_of_punctual_on_arrival *
+                                      100
+                                    ).toFixed(2)}{" "}
+                                    %
+                                    <br />
+                                  </>
+                                )}
+                                {checked.includes(9) && (
+                                  <>
+                                    % pociągów punktualnych na odjeździe (do 5
+                                    min):{" "}
+                                    {(
+                                      station.percentage_of_punctual_on_departure *
+                                      100
+                                    ).toFixed(2)}{" "}
+                                    %
+                                    <br />
+                                  </>
+                                )}
+                                {checked.includes(10) && (
+                                  <>
+                                    % pociągów, które nie nabyły opóźnienie:{" "}
+                                    {(
+                                      station.percentage_of_train_without_gained_delay *
+                                      100
+                                    ).toFixed(2)}{" "}
+                                    %
+                                    <br />
+                                  </>
+                                )}
+                                {checked.includes(11) && (
+                                  <>
+                                    Liczba pociągów z postojem:{" "}
+                                    {station.train_count}
+                                    <br />
+                                  </>
+                                )}
+                              </div>
+                            </li>
+                          ) : (
+                            <></>
+                          )
+                        )}
                       </ul>
                     </div>
                   </div>
