@@ -13,8 +13,7 @@ import {
   Legend,
   TimeScale,
 } from "chart.js";
-import { Chart, Line } from "react-chartjs-2";
-import dataset from "./rsc/chart354.json";
+import { Line } from "react-chartjs-2";
 import "chartjs-adapter-moment";
 import { getRelativePosition } from "chart.js/helpers";
 import { Button } from "@mui/material";
@@ -62,7 +61,7 @@ ChartJS.register(
 );
 
 export function MyChart(props) {
-  const [chartRef, setChartRef] = useState(React.createRef());
+  const [chartRef] = useState(React.createRef());
 
   const [options, setOptions] = useState({
     interaction: {
@@ -145,7 +144,7 @@ export function MyChart(props) {
     console.log(props.dataset);
     if (props.dataset === null) return;
     props.dataset.forEach((train) => {
-      train.category == 1
+      train.category === 1
         ? (colors = [255.0, 0.0, 0.0])
         : (colors = [0.0, 0.0, 0.0]);
       train.train_name.includes("rozkładowy") ? (alpha = 0.2) : (alpha = 1.0);
@@ -169,7 +168,7 @@ export function MyChart(props) {
       }-${props.date.$d.getDate()} 23:59:59`;
       return newOptions;
     });
-  }, [props.dataset]);
+  }, [props.dataset, props.date.$d]);
 
   useEffect(() => {
     if (data === null) return;
@@ -184,7 +183,7 @@ export function MyChart(props) {
       return newOptions;
     });
     chart.update();
-  }, [props.position, chartRef]);
+  }, [data, props.position, chartRef]);
 
   return (
     <Box sx={{ ml: 2 }}>

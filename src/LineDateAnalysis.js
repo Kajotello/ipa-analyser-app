@@ -3,35 +3,20 @@ import { MyChart } from "./Chart";
 import { ToolBar } from "./Toolbar";
 
 import {
-  Autocomplete,
   Box,
-  Button,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Select,
-  Switch,
-  TextField,
   Typography,
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BarChart } from "./BarChart";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import CommentIcon from "@mui/icons-material/Comment";
 import classNames from "classnames";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { TimeSelection } from "./TimeSecetion";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -51,23 +36,6 @@ const options = [
   },
 ];
 
-function ComboBox(props) {
-  return (
-    <Autocomplete
-      disablePortal
-      la
-      id="combo-box-demo"
-      options={props.options}
-      onChange={(event, newValue) => {
-        console.log(newValue.value);
-        props.onChange(newValue.value);
-      }}
-      sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label={props.label} />}
-    />
-  );
-}
-
 function SimpleDialog(props) {
   return (
     <Dialog onClose={props.handleClose} open={props.open}>
@@ -85,7 +53,6 @@ export default function LineDateAnalysis() {
     _id: { point_position: -100 },
   });
   const [statisticType, setStatisticType] = useState(0);
-  const [isWithZero, setIsWithZero] = useState(0);
   const [infoPopupOpen, setPopupOpen] = useState(false);
   const [timePerspective, setTimePerspective] = useState("day");
   const [selectedTime, setSeclectedTime] = useState(null);
@@ -463,7 +430,6 @@ export default function LineDateAnalysis() {
                         </FormControl>
                         <BarChart
                           statisticType={statisticType}
-                          isWithZero={isWithZero}
                           histogramData={histogramsData}
                         ></BarChart>
                       </>

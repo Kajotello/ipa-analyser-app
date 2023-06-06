@@ -2,7 +2,6 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import "./App.css";
 import "./LineDateAnalysis";
 import LineDateAnalysis from "./LineDateAnalysis";
-import LineOverview from "./LineOverviev";
 
 const theme = createTheme({
   palette: {

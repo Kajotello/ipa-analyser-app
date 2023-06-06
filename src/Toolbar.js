@@ -1,10 +1,8 @@
-import React, { cloneElement } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
-import { Autocomplete, IconButton, TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import TrainIcon from "@mui/icons-material/Train";
-import { MoreVert } from "@mui/icons-material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TimelineConfiguration } from "./Timelineconfiguration";
 
 export class ToolBar extends React.Component {
@@ -85,7 +83,7 @@ export class ToolBar extends React.Component {
                 fontWeight="Bold"
                 sx={{ ml: 5, mt: 2 }}
               >
-                Linia kolejowa nr 354 <br /> Pozńań PoD - Piła Główna <br />{" "}
+                Linia kolejowa nr 354 <br /> Poznań PoD - Piła Główna <br />{" "}
                 Długość: 92,538 km
               </Typography>
             </Grid>

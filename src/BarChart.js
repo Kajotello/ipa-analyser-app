@@ -1,7 +1,6 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import zoomPlugin from "chartjs-plugin-zoom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,10 +13,8 @@ import {
   TimeScale,
   BarElement,
 } from "chart.js";
-import { Bar, Chart, Line } from "react-chartjs-2";
-import dataset from "./rsc/chart354.json";
+import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-moment";
-import { getRelativePosition } from "chart.js/helpers";
 
 ChartJS.register(
   BarElement,
@@ -32,8 +29,8 @@ ChartJS.register(
 );
 
 export function BarChart(props) {
-  const [chartRef, setChartRef] = useState(React.createRef());
-  const [options, setOptions] = useState({
+  const [chartRef] = useState(React.createRef());
+  const [options] = useState({
     scales: {
       xAxes: [
         {
