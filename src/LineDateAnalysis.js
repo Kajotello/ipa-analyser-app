@@ -242,6 +242,7 @@ export default function LineDateAnalysis() {
   return (
     <>
       <ToolBar
+        sx={{ position: "sticky", top: 0 }}
         component={
           <TimeSelection
             timePerspective={timePerspective}
@@ -255,6 +256,7 @@ export default function LineDateAnalysis() {
       ></ToolBar>
 
       <SimpleDialog
+        sx={{ p: 4 }}
         open={infoPopupOpen}
         handleClose={() => setPopupOpen(false)}
       ></SimpleDialog>
@@ -373,12 +375,16 @@ export default function LineDateAnalysis() {
               )}
             </Grid>
             <Grid item xs={7}>
-              <Box sx={{ position: "sticky", top: 0 }}>
+              <Box>
                 {timePerspective === "day" && selectedTime !== null ? (
                   <>
                     <Typography variant="h5" sx={{ textAlign: "center" }}>
                       {" "}
-                      Wykres ruchu w dniu {selectedTime.day}
+                      Wykres ruchu w dniu {selectedTime.$d.getDate()}
+                      {"."}
+                      {selectedTime.$d.getMonth() + 1}
+                      {"."}
+                      {selectedTime.$d.getFullYear()} r.
                     </Typography>
                     <Box
                       sx={{
@@ -396,9 +402,9 @@ export default function LineDateAnalysis() {
                 ) : (
                   <></>
                 )}
-                <Box sx={{ ml: 2, mr: 2 }}>
+                <Box sx={{ position: "sticky", top: 0, ml: 2, mr: 2 }}>
                   <Typography sx={{ mt: 4 }}>
-                    Wybrana stacja: {selectedStation.name}
+                    Dane dla stacji/przystanku {selectedStation._id.point_name}
                   </Typography>
                   {selectedStation !== 0 ? (
                     <>

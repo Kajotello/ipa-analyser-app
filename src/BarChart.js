@@ -31,73 +31,6 @@ ChartJS.register(
   Legend
 );
 
-const delayData = [
-  [
-    {
-      labels: [0, 1, 2, 3, 4],
-      datasets: [
-        {
-          label: "Number of Arrivals",
-          data: [19, 28, 20, 16],
-          backgroundColor: "green",
-        },
-      ],
-    },
-    {
-      labels: [0, 1, 2, 3, 4],
-      datasets: [
-        {
-          label: "Number of Deparyutres",
-          data: [20, 16, 19, 28],
-          backgroundColor: "green",
-        },
-      ],
-    },
-    {
-      labels: [0, 1, 2, 3, 4],
-      datasets: [
-        {
-          label: "Number of Deparyutres",
-          data: [20, 160, 19, 28],
-          backgroundColor: "green",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      labels: [0, 1, 2, 3, 4],
-      datasets: [
-        {
-          label: "Number of Arrivals",
-          data: [190, 28, 20, 16],
-          backgroundColor: "green",
-        },
-      ],
-    },
-    {
-      labels: [0, 1, 2, 3, 4],
-      datasets: [
-        {
-          label: "Number of Deparyutres",
-          data: [20, 160, 19, 28],
-          backgroundColor: "green",
-        },
-      ],
-    },
-    {
-      labels: [0, 1, 2, 3, 4],
-      datasets: [
-        {
-          label: "Number of Deparyutres",
-          data: [20, 160, 190, 28],
-          backgroundColor: "green",
-        },
-      ],
-    },
-  ],
-];
-
 export function BarChart(props) {
   const [chartRef, setChartRef] = useState(React.createRef());
   const [options, setOptions] = useState({
@@ -140,7 +73,7 @@ export function BarChart(props) {
       convertedDataset.datasets.push({
         label: key,
         data: props.histogramData[key].data,
-        backgroundColor: "blue",
+        backgroundColor: "#FFBC42",
       });
       datasets.push(convertedDataset);
     }

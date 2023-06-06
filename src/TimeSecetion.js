@@ -11,6 +11,10 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import PauseIcon from "@mui/icons-material/Pause";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import Fab from "@mui/material/Fab";
 
 const timeInterval = [
   { label: "Dzień", value: "day" },
@@ -44,10 +48,21 @@ export function TimeSelection(props) {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={1}>
-        <Button onClick={props.handlePrevDateClick} sx={{ mt: 2 }}>
-          Poprzedni
-        </Button>
+      <Grid item xs={1} justifyContent="right" display="flex">
+        <Fab
+          size="small"
+          aria-label="upload picture"
+          sx={{
+            mt: 3.5,
+            mr: 2,
+            bgcolor: "#f55702",
+            "&:hover": { bgcolor: "#f55702" },
+          }}
+          component="label"
+          onClick={props.handlePrevDateClick}
+        >
+          <KeyboardArrowLeftIcon sx={{ fontSize: 30 }} />
+        </Fab>
       </Grid>
       <Grid item xs={2} sx={{ justifyContent: "center" }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -67,9 +82,20 @@ export function TimeSelection(props) {
         </LocalizationProvider>
       </Grid>
       <Grid item xs={1}>
-        <Button onClick={props.handleNextDateClick} sx={{ mt: 2 }}>
-          Następny
-        </Button>
+        <Fab
+          size="small"
+          aria-label="upload picture"
+          sx={{
+            mt: 3.5,
+            ml: 2,
+            bgcolor: "#f55702",
+            "&:hover": { bgcolor: "#f55702" },
+          }}
+          component="label"
+          onClick={props.handleNextDateClick}
+        >
+          <KeyboardArrowRightIcon sx={{ fontSize: 30 }} />
+        </Fab>
       </Grid>
     </Grid>
   );
