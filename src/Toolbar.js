@@ -49,7 +49,11 @@ export class ToolBar extends React.Component {
       <div>
         <AppBar
           position="relative"
-          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, mb: 4 }}
+          sx={{
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            mb: 4,
+            backgroundColor: "primary",
+          }}
         >
           <Grid container>
             <Grid item xs={2} display="flex">
