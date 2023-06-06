@@ -1,7 +1,7 @@
 import "./Timeline.css";
 import { MyChart } from "./Chart";
 import { ToolBar } from "./Toolbar";
-
+import { serverAddress } from "./consts";
 import {
   Box,
   FormControl,
@@ -62,13 +62,13 @@ export default function LineDateAnalysis() {
   const [category, setCategory] = useState(0);
   const [direction, setDirection] = useState(0);
   const [onlyStation, setOnlyStation] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (selectedTime !== null) {
       setIsLoading(true);
       axios
-        .post("http://localhost:8000/get-timetable", {
+        .post(`${serverAddress}/get-timetable`, {
           day: selectedTime.$d.getDate(),
           month: selectedTime.$d.getMonth() + 1,
           year: selectedTime.$d.getFullYear(),
@@ -80,14 +80,14 @@ export default function LineDateAnalysis() {
           console.log(error);
         });
     }
-    setIsLoading(false);
+    // setIsLoading(false);
   }, [selectedTime, timePerspective]);
 
   useEffect(() => {
     if (selectedTime === null) return;
     setIsLoading(true);
     axios
-      .post("http://localhost:8000/line-travel-data", {
+      .post(`${serverAddress}/line-travel-data`, {
         day: selectedTime.$d.getDate(),
         month: selectedTime.$d.getMonth() + 1,
         year: selectedTime.$d.getFullYear(),
@@ -102,14 +102,14 @@ export default function LineDateAnalysis() {
       .catch(function (error) {
         console.log(error);
       });
-    setIsLoading(false);
+    // setIsLoading(false);
   }, [selectedTime, timePerspective, category, direction]);
 
   useEffect(() => {
     if (selectedTime !== null) {
       setIsLoading(true);
       axios
-        .post("http://localhost:8000/station-data", {
+        .post(`${serverAddress}/station-data`, {
           day: selectedTime.$d.getDate(),
           month: selectedTime.$d.getMonth() + 1,
           year: selectedTime.$d.getFullYear(),
@@ -124,7 +124,7 @@ export default function LineDateAnalysis() {
         .catch(function (error) {
           console.log(error);
         });
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   }, [selectedTime, timePerspective, selectedStation, direction, category]);
 
