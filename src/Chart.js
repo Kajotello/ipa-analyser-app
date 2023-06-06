@@ -132,7 +132,7 @@ export function MyChart(props) {
   const [data, setNewData] = useState(null);
 
   function handleReset() {
-    if (chartRef.current !== null) {
+    if (chartRef.current) {
       var chart = chartRef.current;
       chart.resetZoom();
     }
@@ -141,7 +141,6 @@ export function MyChart(props) {
   useEffect(() => {
     let newData = { datasets: [] };
     var colors, alpha;
-    console.log(props.dataset);
     if (props.dataset === null) return;
     props.dataset.forEach((train) => {
       train.category === 1
@@ -172,8 +171,10 @@ export function MyChart(props) {
 
   useEffect(() => {
     if (data === null) return;
-    if (chartRef.current !== null) {
+    if (chartRef.current) {
       var chart = chartRef.current;
+    } else {
+      return;
     }
 
     setOptions((prevOptions) => {
