@@ -33,34 +33,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { TimeSelection } from "./TimeSecetion";
-
-const myLine = [
-  {
-    name: "Poznań Główny",
-    position: 0.0,
-    type: "station",
-  },
-  {
-    name: "Oborniki Wielkopolskie Miasto",
-    position: 25.983,
-    type: "stop",
-  },
-  {
-    name: "Chodzież",
-    position: 60.784,
-    type: "station",
-  },
-  {
-    name: "Dziembówko",
-    position: 83.021,
-    type: "station",
-  },
-  {
-    name: "Piła Główna",
-    position: 90.232,
-    type: "station",
-  },
-];
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const options = [
   {
@@ -121,9 +95,11 @@ export default function LineDateAnalysis() {
   const [category, setCategory] = useState(0);
   const [direction, setDirection] = useState(0);
   const [onlyStation, setOnlyStation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (selectedTime !== null) {
+      setIsLoading(true);
       axios
         .post("http://localhost:8000/get-timetable", {
           day: selectedTime.$d.getDate(),
@@ -137,10 +113,12 @@ export default function LineDateAnalysis() {
           console.log(error);
         });
     }
+    setIsLoading(false);
   }, [selectedTime, timePerspective]);
 
   useEffect(() => {
     if (selectedTime === null) return;
+    setIsLoading(true);
     axios
       .post("http://localhost:8000/line-travel-data", {
         day: selectedTime.$d.getDate(),
@@ -157,10 +135,12 @@ export default function LineDateAnalysis() {
       .catch(function (error) {
         console.log(error);
       });
+    setIsLoading(false);
   }, [selectedTime, timePerspective, category, direction]);
 
   useEffect(() => {
     if (selectedTime !== null) {
+      setIsLoading(true);
       axios
         .post("http://localhost:8000/station-data", {
           day: selectedTime.$d.getDate(),
@@ -176,6 +156,7 @@ export default function LineDateAnalysis() {
         .catch(function (error) {
           console.log(error);
         });
+      setIsLoading(false);
     }
   }, [selectedTime, timePerspective, selectedStation, direction, category]);
 
@@ -230,6 +211,12 @@ export default function LineDateAnalysis() {
   };
   return (
     <>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <ToolBar
         sx={{ position: "sticky", top: 0 }}
         component={
