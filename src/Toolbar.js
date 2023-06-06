@@ -7,11 +7,6 @@ import { MoreVert } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TimelineConfiguration } from "./Timelineconfiguration";
 
-const options = [
-  { label: "Opóźnienia - widok dnia", value: 1 },
-  { label: "Opóźnienia - widok zbiorczy", value: 2 },
-];
-
 export class ToolBar extends React.Component {
   constructor(props) {
     super(props);

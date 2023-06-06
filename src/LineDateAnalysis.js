@@ -38,15 +38,15 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const options = [
   {
-    label: "rozkład opóźnień wyjazdowych",
+    label: "rozkład opóźnień przyjazdowych (min)",
     value: 0,
   },
   {
-    label: "rozkład opóźnień przyjazdowych",
+    label: "rozkład opóźnień wyjazdowych (min)",
     value: 1,
   },
   {
-    label: "rozkład opóźnień nabytych",
+    label: "rozkład czasu postoju (s)",
     value: 2,
   },
 ];
@@ -82,7 +82,7 @@ function SimpleDialog(props) {
 export default function LineDateAnalysis() {
   const [checked, setChecked] = useState([0]);
   const [selectedStation, setStation] = useState({
-    _id: { point_position: 0 },
+    _id: { point_position: -100 },
   });
   const [statisticType, setStatisticType] = useState(0);
   const [isWithZero, setIsWithZero] = useState(0);
@@ -432,38 +432,45 @@ export default function LineDateAnalysis() {
                 ) : (
                   <></>
                 )}
-                <Box sx={{ position: "sticky", top: 0, ml: 2, mr: 2 }}>
-                  <Typography sx={{ mt: 4 }}>
-                    Dane dla stacji/przystanku {selectedStation._id.point_name}
-                  </Typography>
-                  {selectedStation !== 0 ? (
-                    <>
-                      <ComboBox
-                        options={options}
-                        value={statisticType}
-                        onChange={setStatisticType}
-                      ></ComboBox>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            value={isWithZero}
-                            onChange={(e, newValue) => {
-                              setIsWithZero(newValue === true ? 1 : 0);
-                            }}
-                          />
-                        }
-                        label="Czy uwzględniać 0? "
-                      />
-                      <BarChart
-                        statisticType={statisticType}
-                        isWithZero={isWithZero}
-                        histogramData={histogramsData}
-                      ></BarChart>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </Box>
+                {selectedStation._id.point_position !== -100 && (
+                  <Box sx={{ position: "sticky", top: 0, ml: 2, mr: 2 }}>
+                    <Typography sx={{ mt: 4 }}>
+                      Dane dla stacji/przystanku{" "}
+                      {selectedStation._id.point_name}
+                    </Typography>
+                    {selectedStation !== 0 ? (
+                      <>
+                        <FormControl fullWidth sx={{ mt: 3 }}>
+                          <InputLabel id="select-time-scope-label">
+                            Horyzont czasowy
+                          </InputLabel>
+                          <Select
+                            labelId="select-time-scope-label"
+                            options={options}
+                            value={statisticType}
+                            onChange={(event, newValue) =>
+                              setStatisticType(newValue.props.value)
+                            }
+                            label="Rodzaj statystyki"
+                          >
+                            {options.map((option) => (
+                              <MenuItem value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <BarChart
+                          statisticType={statisticType}
+                          isWithZero={isWithZero}
+                          histogramData={histogramsData}
+                        ></BarChart>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </Box>
+                )}
               </Box>
             </Grid>
           </Grid>
