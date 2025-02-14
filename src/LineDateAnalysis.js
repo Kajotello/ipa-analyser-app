@@ -491,8 +491,8 @@ export default function LineDateAnalysis() {
               marginTop={10}
             >
               <Typography variant="h3">
-                Witaj! Wybierz datę żeby rozpocząć.
-                Ze względu na wyłączenie infopasażera dane są dostępne tylko dla dat przed marcem 2023.
+                Witaj! Wybierz datę żeby rozpocząć. <br/>
+                Ze względu na wyłączenie infopasażera dane są dostępne <br/> tylko dla dat przed marcem 2023. <br/>
                 Ponadto pobieranie pierwszych danych może potrwać ok. 1-2 minut
               </Typography>
               <img src="edek.jpg" alt="maskotka"></img>
