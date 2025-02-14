@@ -492,6 +492,8 @@ export default function LineDateAnalysis() {
             >
               <Typography variant="h3">
                 Witaj! Wybierz datę żeby rozpocząć.
+                Ze względu na wyłączenie infopasażera dane są dostępne tylko dla dat przed marcem 2023.
+                Ponadto pobieranie pierwszych danych może potrwać ok. 1-2 minut
               </Typography>
               <img src="edek.jpg" alt="maskotka"></img>
             </Box>
